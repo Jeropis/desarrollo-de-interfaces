@@ -1,11 +1,12 @@
 package application;
 
 import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -30,10 +31,10 @@ public class Main extends Application {
 //			panel.getChildren().addAll(lbl,btn);
 //			FIN EJEMPLO DE UN STACK PANEL
 
-			Button btn1 = new Button("Botón 1");
-			Button btn2 = new Button("Botón 2");
-			Button btn3 = new Button("Botón 3");
-			Button btn4 = new Button("Botón 4");
+//			Button btn1 = new Button("Botón 1");
+//			Button btn2 = new Button("Botón 2");
+//			Button btn3 = new Button("Botón 3");
+//			Button btn4 = new Button("Botón 4");
 
 //			VBox panelVertical = new VBox(15);
 //			panelVertical.setPadding(new Insets(15));
@@ -50,16 +51,25 @@ public class Main extends Application {
 //			panel.setRight(panelVertical);
 //			FIN EJEMPLO DE UN BORDER PANE
 
-			GridPane panel = new GridPane();
+//			GridPane panel = new GridPane();
+//			
+//			panel.setVgap(15);
+//			panel.setHgap(15);
+//			panel.setPadding(new Insets(15));
+//			
+//			panel.add(btn1, 0, 0);
+//			panel.add(btn2, 1, 0);
+//			panel.add(btn3, 0, 1);
+//			panel.add(btn4, 1, 1);
 			
-			panel.setVgap(15);
-			panel.setHgap(15);
-			panel.setPadding(new Insets(15));
 			
-			panel.add(btn1, 0, 0);
-			panel.add(btn2, 1, 0);
-			panel.add(btn3, 0, 1);
-			panel.add(btn4, 1, 1);
+			StackPane panel = new StackPane();
+			
+			Rectangle r1 = new Rectangle(400,400,Color.DARKGREEN);
+			Rectangle r2 = new Rectangle(300,300,Color.GREEN);
+			Rectangle r3 = new Rectangle(200,200,Color.LIGHTGREEN);
+			
+			panel.getChildren().addAll(r1,r2,r3);
 			
 			Scene scene = new Scene(panel, 400, 300);
 			primaryStage.setScene(scene);

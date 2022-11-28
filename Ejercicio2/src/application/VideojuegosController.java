@@ -25,7 +25,8 @@ public class VideojuegosController {
 	private ChoiceBox<String> cbPegi;
 	@FXML
 	private Button botonAnadir;
-
+	@FXML
+	private Button botonBorrar;
 	@FXML
 	private TableView<Videojuego> tableJuego;
 	@FXML
@@ -59,9 +60,8 @@ public class VideojuegosController {
 
 	@FXML
 	public void anadirVideojuego(ActionEvent event) {
-		cbConsola.setValue("");
-		cbPegi.setValue("");
-		if(!txtNombre.getText().isBlank()&&!txtPrecio.getText().isBlank()&&!cbConsola.getValue().isBlank()&&!cbPegi.getValue().isBlank()) {
+
+		if(!txtNombre.getText().isBlank()&&!txtPrecio.getText().isBlank()&&!cbConsola.getSelectionModel().isEmpty()&&!cbPegi.getSelectionModel().isEmpty()) {
 		if (esNumero(txtPrecio.getText())) {
 			Videojuego v = new Videojuego(txtNombre.getText(), Integer.parseInt(txtPrecio.getText()),
 					cbConsola.getValue().toString(), cbPegi.getValue());
@@ -96,6 +96,8 @@ public class VideojuegosController {
 	@FXML
 	public void borrarVideojuego(ActionEvent event) {
 		System.out.println("Borrando un videojuego");
+		int indiceSeleccionado = tableJuego.getSelectionModel().getSelectedIndex();
+		tableJuego.getItems().remove(indiceSeleccionado);
 	}
 
 	public boolean esNumero(String s) {

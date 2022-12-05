@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.VideojuegosController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.VideojuegosController">
    <children>
       <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="600.0">
         <menus>
@@ -41,7 +41,7 @@
       </MenuBar>
       <SplitPane dividerPositions="0.5" layoutY="27.0" prefHeight="375.0" prefWidth="600.0">
         <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+          <AnchorPane id="panel_izq" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
                   <BorderPane prefHeight="373.0" prefWidth="296.0">
                      <top>
@@ -110,7 +110,10 @@
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                            <children>
                               <Button fx:id="botonAnadir" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#anadirVideojuego" text="Añadir" />
-                              <Button fx:id="botonBorrar" mnemonicParsing="false" onAction="#borrarVideojuego" text="Borrar" />
+                              <Button fx:id="botonBorrar" mnemonicParsing="false" onAction="#borrarVideojuego" text="Borrar">
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin></Button>
                            </children>
                         </HBox>
                      </bottom>

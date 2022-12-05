@@ -1,5 +1,10 @@
 package application;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -54,37 +59,67 @@ public class VideojuegosController {
 		columConsola.setCellValueFactory(new PropertyValueFactory<>("consola"));
 		columPegi.setCellValueFactory(new PropertyValueFactory<>("pegi"));
 
-		tableJuego.setItems(listaVideojuegos);
+		ObservableList<Videojuego> listaVideojuegosDB = getVideojuegosBD();
+
+		tableJuego.setItems(listaVideojuegosDB);
+
+	}
+
+	private ObservableList<Videojuego> getVideojuegosBD() {
+
+		ObservableList<Videojuego> listaVideojuegosBD = FXCollections.observableArrayList();
+
+		DatabaseConnection dbConnection = new DatabaseConnection();
+		Connection connection = dbConnection.getConnection();
+
+		String query = "select * from videojuegos";
+
+		try {
+			PreparedStatement ps = connection.prepareStatement(query);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				Videojuego vj = new Videojuego(rs.getString("nombre"), rs.getInt("precio"), rs.getString("consola"),
+						rs.getString("pegi"));
+				listaVideojuegosBD.add(vj);
+			}
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return listaVideojuegosBD;
 
 	}
 
 	@FXML
 	public void anadirVideojuego(ActionEvent event) {
 
-		if(!txtNombre.getText().isBlank()&&!txtPrecio.getText().isBlank()&&!cbConsola.getSelectionModel().isEmpty()&&!cbPegi.getSelectionModel().isEmpty()) {
-		if (esNumero(txtPrecio.getText())) {
-			Videojuego v = new Videojuego(txtNombre.getText(), Integer.parseInt(txtPrecio.getText()),
-					cbConsola.getValue().toString(), cbPegi.getValue());
+		if (!txtNombre.getText().isBlank() && !txtPrecio.getText().isBlank() && !cbConsola.getSelectionModel().isEmpty()
+				&& !cbPegi.getSelectionModel().isEmpty()) {
+			if (esNumero(txtPrecio.getText())) {
+				Videojuego v = new Videojuego(txtNombre.getText(), Integer.parseInt(txtPrecio.getText()),
+						cbConsola.getValue().toString(), cbPegi.getValue());
 
-			listaVideojuegos.add(v);
+				listaVideojuegos.add(v);
 
-			txtNombre.clear();
-			txtPrecio.clear();
-			cbConsola.getSelectionModel().clearSelection();
-			cbPegi.getSelectionModel().clearSelection();
+				txtNombre.clear();
+				txtPrecio.clear();
+				cbConsola.getSelectionModel().clearSelection();
+				cbPegi.getSelectionModel().clearSelection();
+			} else {
+				Alert alerta = new Alert(AlertType.ERROR);
+				alerta.setTitle("Error al insertar");
+				alerta.setHeaderText("No se ha introducido un numero en el campo del precio");
+				alerta.setContentText("Por favor introduzca un precio correcto");
+				alerta.showAndWait();
+
+				/**
+				 * SI NO SE INTRODUCEN TODOS LOS DATOS SE MOSTRARÁ UNA ALERTA DE TIPO WARNING
+				 * AVISANDO QUE FALTAN DATOS
+				 */
+			}
 		} else {
-			Alert alerta = new Alert(AlertType.ERROR);
-			alerta.setTitle("Error al insertar");
-			alerta.setHeaderText("No se ha introducido un numero en el campo del precio");
-			alerta.setContentText("Por favor introduzca un precio correcto");
-			alerta.showAndWait();
-			
-			/**
-			 * SI NO SE INTRODUCEN TODOS LOS DATOS SE MOSTRARÁ UNA ALERTA DE TIPO WARNING
-			 * AVISANDO QUE FALTAN DATOS
-			 */
-		}
-		}else {
 			Alert alerta = new Alert(AlertType.WARNING);
 			alerta.setTitle("No se puede insertar");
 			alerta.setHeaderText("No se puede dejar ningún campo en blanco");
@@ -97,7 +132,18 @@ public class VideojuegosController {
 	public void borrarVideojuego(ActionEvent event) {
 		System.out.println("Borrando un videojuego");
 		int indiceSeleccionado = tableJuego.getSelectionModel().getSelectedIndex();
-		tableJuego.getItems().remove(indiceSeleccionado);
+
+		if (indiceSeleccionado <= -1) {
+			Alert alerta = new Alert(AlertType.ERROR);
+			alerta.setTitle("Error al borrar");
+			alerta.setHeaderText("No se ha seleccionado ningun libro a borrar");
+			alerta.setContentText("Por favor, selecciona un videojuego");
+			alerta.showAndWait();
+		} else {
+			tableJuego.getItems().remove(indiceSeleccionado);
+			tableJuego.getSelectionModel().clearSelection();
+		}
+
 	}
 
 	public boolean esNumero(String s) {

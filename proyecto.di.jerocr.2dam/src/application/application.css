@@ -1,0 +1,24 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+.button{
+	-fx-background-color:blue;
+	-fx-font-size: 12px;
+	-fx-text-fill: lightblue;
+	
+}
+
+.button:default {
+    -fx-background-color: -fx-focus-color;
+    -fx-text-fill: #ffffff;
+}
+
+.button:hover {
+    -fx-background-color: red;
+}
+
+#panel_izq {
+	-fx-background-color: lightblue;
+}
+
+#panel_izq_p {
+	-fx-background-color: lightgreen;
+}

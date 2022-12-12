@@ -43,8 +43,7 @@ public class VideojuegosController {
 	@FXML
 	private TableColumn<Videojuego, String> columPegi;
 
-	private ObservableList<Videojuego> listaVideojuegos = FXCollections
-			.observableArrayList(new Videojuego("Fifa 23", 49, "PS5", "PEGI 3"));
+	private ObservableList<Videojuego> listaVideojuegos = FXCollections.observableArrayList();
 
 	public ObservableList<String> consolas = FXCollections.observableArrayList("PS5", "PS4", "Nintendo", "XBOX");
 	public ObservableList<String> pegis = FXCollections.observableArrayList("PEGI 3", "PEGI 7", "PEGI 12", "PEGI 16",
@@ -78,7 +77,7 @@ public class VideojuegosController {
 			PreparedStatement ps = connection.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				Videojuego vj = new Videojuego(rs.getString("nombre"), rs.getInt("precio"), rs.getString("consola"),
+				Videojuego vj = new Videojuego(rs.getInt("id"), rs.getString("nombre"), rs.getInt("precio"), rs.getString("consola"),
 						rs.getString("pegi"));
 				listaVideojuegosBD.add(vj);
 			}
@@ -107,6 +106,29 @@ public class VideojuegosController {
 				txtPrecio.clear();
 				cbConsola.getSelectionModel().clearSelection();
 				cbPegi.getSelectionModel().clearSelection();
+
+				try {
+
+					DatabaseConnection dbConnection = new DatabaseConnection();
+					Connection connection = dbConnection.getConnection();
+					String query = "insert into videojuegos (nombre, precio, consola, pegi) VALUES (?,?,?,?)";
+					PreparedStatement ps = connection.prepareStatement(query);
+					ps.setString(1, v.getNombre());
+					ps.setInt(2, v.getPrecio());
+					ps.setString(3, v.getConsola());
+					ps.setString(4, v.getPegi());
+					ps.executeUpdate();
+					connection.close();
+
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				ObservableList<Videojuego> listaVideojuegosDB = getVideojuegosBD();
+
+				tableJuego.setItems(listaVideojuegosDB);
+
 			} else {
 				Alert alerta = new Alert(AlertType.ERROR);
 				alerta.setTitle("Error al insertar");
@@ -136,12 +158,34 @@ public class VideojuegosController {
 		if (indiceSeleccionado <= -1) {
 			Alert alerta = new Alert(AlertType.ERROR);
 			alerta.setTitle("Error al borrar");
-			alerta.setHeaderText("No se ha seleccionado ningun libro a borrar");
+			alerta.setHeaderText("No se ha seleccionado ningun videojuego a borrar");
 			alerta.setContentText("Por favor, selecciona un videojuego");
 			alerta.showAndWait();
 		} else {
-			tableJuego.getItems().remove(indiceSeleccionado);
-			tableJuego.getSelectionModel().clearSelection();
+//			tableJuego.getItems().remove(indiceSeleccionado);
+
+			DatabaseConnection dbConnection = new DatabaseConnection();
+			Connection connection = dbConnection.getConnection();
+			
+			
+			try {
+				String query = "delete from videojuegos where id = ?";
+				PreparedStatement ps = connection.prepareStatement(query);
+				Videojuego v = tableJuego.getSelectionModel().getSelectedItem();
+				ps.setInt(1, v.getId());
+				ps.executeUpdate();
+				tableJuego.getSelectionModel().clearSelection();
+				
+				ObservableList<Videojuego> listaVideojuegosDB = getVideojuegosBD();
+
+				tableJuego.setItems(listaVideojuegosDB);
+				
+				connection.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 
 	}

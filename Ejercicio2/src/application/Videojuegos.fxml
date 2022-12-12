@@ -115,6 +115,9 @@
                                     <Insets />
                                  </HBox.margin></Button>
                            </children>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
                         </HBox>
                      </bottom>
                   </BorderPane>
